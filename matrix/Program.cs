@@ -30,11 +30,11 @@ namespace matrix
 
             List<Line> lines = new List<Line>();
 
-            for (int i = 0; i < Console.BufferWidth / 2; i++)
+            for (int i = 0; i < Console.BufferWidth -1; i++)
             {
                 //Thread t = new Thread(new ThreadStart(ThreadLine));
                 //t.Start();
-                Line line = new Line(rnd.Next(0, Console.BufferWidth - 1));
+                Line line = new Line(i); //rnd.Next(0, Console.BufferWidth - 1));
                 lines.Add(line);
             }
 
@@ -73,33 +73,33 @@ namespace matrix
 
     public class Line
     {
-        int delay = 100;
-        int loop = 15;
+        static int delay = 100;
+        int loop = Program.rnd.Next(5, 25);
         int row;
-        int column = 0;
+        int column = 0 - Program.rnd.Next(delay);
         List<char> charlist = new List<char>();
 
         public Line(int _row)
         {
             row = _row;
-            column = 0 - Program.rnd.Next(delay);
-
+            
             for (int i = 0; i < 250; i++)
             {
-                charlist.Add(Convert.ToChar(Program.rnd.Next(50, 100)));
+                charlist.Add(Convert.ToChar(Program.rnd.Next(32,256)));
             }
         }
 
         public void DrawLine()
         {
-            
             for (int i = 0; i < (loop < column ? loop : column); i++)
             {
+                charlist[Program.rnd.Next(0, 250)] = Convert.ToChar(Program.rnd.Next(32,256));
+
                 if (column - i < (Window.GetPosition().Bottom - Window.GetPosition().Top - 39) / 16)
                 {
                     Console.SetCursorPosition(row, column - i - 1);
 
-                    bool run = false;
+                    bool run = true;
 
                     ConsoleColor colour = ConsoleColor.DarkGreen;
                     if (i == loop - 1) { colour = ConsoleColor.Black; run = true; }
@@ -117,6 +117,7 @@ namespace matrix
             if (column - loop > (Window.GetPosition().Bottom - Window.GetPosition().Top - 39) / 16)
             {
                 column = 0 - Program.rnd.Next(delay);
+                loop = Program.rnd.Next(5, 25);
             }
         }
     }
